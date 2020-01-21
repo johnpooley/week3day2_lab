@@ -30,7 +30,8 @@ property2.save
 property3.save
 
 property2.value = 1000000
-PropertyTracker.find(15)
+
+found_property = PropertyTracker.find(property1.id)
 
 
 

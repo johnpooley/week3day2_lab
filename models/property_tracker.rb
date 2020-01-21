@@ -55,19 +55,23 @@ class PropertyTracker
   def PropertyTracker.find(id)
     db = PG.connect({dbname: 'letting_agents', host: 'localhost'})
     sql = "SELECT * FROM property_tracker WHERE id = $1"
-    id = [@id]
+
     db.prepare("find", sql)
-    db.exec_prepared("find", id)
+    pg_result = db.exec_prepared("find", [id]) # this is a bit like an array of hashes
+    found_property_hash = pg_result.first()
     db.close
+    return PropertyTracker.new(found_property_hash)
   end
 
   def PropertyTracker.find_by_address(address)
     db = PG.connect({dbname: 'letting_agents', host: 'localhost'})
     sql = "SELECT * FROM property_tracker WHERE address = $1"
-    address = [@address]
-    db.prepare("find", sql)
-    db.exec_prepared("find", address)
+    db.prepare("find_by_address", sql)
+    address_result = db.exec_prepared("find_by_address", [address]).first
     db.close
+
+    return PropertyTracker.new(address_result) unless address_result == nil
+    
   end
 
 
